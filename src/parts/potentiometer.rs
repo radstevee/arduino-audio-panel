@@ -38,8 +38,6 @@ impl Potentiometer {
             }
         });
 
-
-
         pot
     }
 
