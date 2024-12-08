@@ -1,5 +1,5 @@
-use std::io::Read;
-use serial2::SerialPort;
+use serial2::{CharSize, FlowControl, Parity, SerialPort, Settings, StopBits};
+use std::io::{Read, Result};
 
 pub struct Serial {
     pub port: SerialPort,
@@ -7,12 +7,20 @@ pub struct Serial {
 }
 
 impl Serial {
-    pub fn open(path: &str, baud_rate: u32) -> Serial {
-        let port = SerialPort::open(path, baud_rate).unwrap();
-        Serial {
+    pub fn open(path: &str, baud_rate: u32) -> Result<Serial> {
+        let port = SerialPort::open(path, |mut settings: Settings| {
+            settings.set_raw();
+            settings.set_baud_rate(baud_rate)?;
+            settings.set_char_size(CharSize::Bits7);
+            settings.set_stop_bits(StopBits::Two);
+            settings.set_parity(Parity::Odd);
+            settings.set_flow_control(FlowControl::RtsCts);
+            Ok(settings)
+        })?;
+        Ok(Serial {
             port,
             buffer: Vec::new(),
-        }
+        })
     }
 
     pub fn read_line(&mut self) -> Option<String> {
@@ -28,3 +36,4 @@ impl Serial {
         Some(line)
     }
 }
+

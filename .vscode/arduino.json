@@ -2,6 +2,6 @@
     "configuration": "cpu=atmega328old",
     "board": "arduino:avr:nano",
     "sketch": "ArduinoGoXLR/ArduinoGoXLR.ino",
-    "port": "/dev/ttyUSB0",
+    "port": "/dev/ttyUSB1",
     "programmer": "arduinoisp"
 }

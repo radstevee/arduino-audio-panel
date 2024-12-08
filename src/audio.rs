@@ -10,7 +10,10 @@ pub fn create_sink(name: String) {
 }
 
 pub fn destroy_sink(name: String) {
-    let command = format!("pactl unload-module \"$(pactl list short modules | grep \"{}\" | awk '{{print $1}}')\"", name);
+    let command = format!(
+        "pactl unload-module \"$(pactl list short modules | grep \"{}\" | awk '{{print $1}}')\"",
+        name
+    );
     std::process::Command::new("sh")
         .arg("-c")
         .arg(command)
@@ -18,13 +21,10 @@ pub fn destroy_sink(name: String) {
         .expect("failed to execute process");
 }
 
-pub fn set_volume(name: String, volume: f32) {
-    println!("Setting volume of {} to {}", name, volume);
+pub fn set_volume(name: String, volume: u8) {
+    println!("Setting volume of {} to {}%", name, volume);
 
-    // Format the volume with one decimal place
-    let volume_str = format!("{:.1}", volume);
-
-    let command = format!("pactl set-source-volume {} {}", name, volume_str);
+    let command = format!("pactl set-source-volume {} {}%", name, volume);
     std::process::Command::new("sh")
         .arg("-c")
         .arg(command)
